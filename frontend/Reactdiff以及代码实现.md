@@ -6,13 +6,13 @@ date: 2018-12-21
 因为虚拟DOM是内存数据，性能是极高的，而对实际DOM进行操作的仅仅是Diff部分，因而能达到提高性能的目的。这样就需要每次获取dom的diff。  
 react diff  
 （1）diff 流程  
-![image](../old-blog/2018/12/21/Reactdiff以及代码实现/1.png)  
+![image](images/Reactdiff以及代码实现/1.png)  
 （2）tree diff:  
 假设： web ui 中 dom节点跨层级移动的操作很少，可以忽略不计。  
 优化：两棵树只比较同层节点是否相等，如果不等，直接删除，否则新建。  
 缺点： 如果出现跨层操作，比如将A整个移动到D下，整个处理过程为：create A -> create B -> create C -> delete A， 效率很低。  
 指导原则： 不要使用dom节点的跨层级操作，可以用dom的显示和隐藏进行控制。  
-![image](../old-blog/2018/12/21/Reactdiff以及代码实现/2.png)  
+![image](images/Reactdiff以及代码实现/2.png)  
 （2）component diff  
 假设：相同类的两个组件拥有相同的结构，不同类的两个组件的结构不同。  
 优化：相同类的两个组件按照virtual dom的方式继续进行比较，不同类的两个组件直接替换，不进行比较，相同类的两个组件可以通过shouldComponentUpdate来进行比较。  
@@ -23,10 +23,10 @@ react diff
 假设：同一层的一组节点可以通过定个唯一的key来进行区分  
 优化：同一层的一组节点定义唯一的key，通过key进行比较和重建  
 重建方式: 遍历新的节点顺序，如果当前的节点在旧的结构中的挂载Index < 当前的遍历Index值，则对当前节点进行移动，否则不移动。  
-![image](../old-blog/2018/12/21/Reactdiff以及代码实现/3.png)  
+![image](images/Reactdiff以及代码实现/3.png)  
 缺点：如果将最后的一个节点移动到了行首，会导致整个链上的节点的移动，效率很低。  
 指导原则：不要讲最后一个节点移动到行首。  
-![image](../old-blog/2018/12/21/Reactdiff以及代码实现/4.png)  
+![image](images/Reactdiff以及代码实现/4.png)  
 diff的差异比较过程如下：  
 首先对新集合的节点进行循环遍历，for (name in nextChildren)，通过唯一 key 可以判断新老集合中是否存在相同的节点，if (prevChild === nextChild)，如果存在相同节点，则进行移动操作，但在移动前需要将当前节点在老集合中的位置与 lastIndex 进行比较，if (child._mountIndex < lastIndex)，则进行节点移动操作，否则不执行该操作。这是一种顺序优化手段，lastIndex 一直在更新，表示访问过的节点在老集合中最右的位置（即最大的位置），如果新集合中当前访问的节点比 lastIndex 大，说明当前访问节点在老集合中就比上一个节点位置靠后，则该节点不会影响其他节点的位置，因此不用添加到差异队列中，即不执行移动操作，只有当访问的节点比 lastIndex 小时，才需要进行移动操作。  
 以上图为例，可以更为清晰直观的描述 diff 的差异对比过程：

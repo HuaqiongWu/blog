@@ -21,11 +21,11 @@ date: 2020-08-04
 
 
 
-![20567b3ea38c7aa789a8541edcc5fc3b](../old-blog/2020/08/04/hadoop/A7FCBADC-682F-4475-9CBF-7E76D58FA87A.png)
+![20567b3ea38c7aa789a8541edcc5fc3b](images/hadoop/A7FCBADC-682F-4475-9CBF-7E76D58FA87A.png)
 
 #### HDFS架构
 
-![fdde795e5d06eb9f93d954f2aa083560](../old-blog/2020/08/04/hadoop/F96D99EE-1D59-445E-9273-544F8D3CA754.png)
+![fdde795e5d06eb9f93d954f2aa083560](images/hadoop/F96D99EE-1D59-445E-9273-544F8D3CA754.png)
 
   * client：客户端，提供一些命令来访问hdfs;
   * nameNode: 就是master，是一个管理者，管理整个文件系统的元数据以及每一个文件所对应的数据块信息；
@@ -60,7 +60,7 @@ hdfs中的block默认是保存三份(dfs.replication设置)；blocksize默认是
 #### MapReduce
 
 Hadoop任务的核心思想是MapReduce，shuffle是MapReduce的核心。shuffle的主要工作是从Map结束到Reduce开始之间的过程。shuffle阶段又可以分为Map端的shuffle和Reduce端的shuffle。  
-![f670231269b9996bf9c076d0549492af](../old-blog/2020/08/04/hadoop/1DF573B9-E982-4656-921A-80F222EAEE81.png)  
+![f670231269b9996bf9c076d0549492af](images/hadoop/1DF573B9-E982-4656-921A-80F222EAEE81.png)  
 **map和reduce的数量：**  
 totalSize: mapreduce job输入文件的总大小；  
 numSplits: map的个数；（设置的希望切成多少份）  
@@ -89,16 +89,16 @@ finalSplitSize=max(minSize,min(goalSize,blockSize))
         ```
 
   * shuffle: 从map输出到reduce输入的中间过程为shuffle的阶段；它是将map输出的无规则的数据搭乱成有规则的数据，以便reduce端接收；分为map shuffle和reduce shuffle。  
-![30b34db80670938be0d0277f2172a5c2](../old-blog/2020/08/04/hadoop/82FB9C5E-9B36-4AA7-95AA-E2589B7A361C.png)  
+![30b34db80670938be0d0277f2172a5c2](images/hadoop/82FB9C5E-9B36-4AA7-95AA-E2589B7A361C.png)  
 map阶段的shuffle特点：
 
     1. map产生的kv结果是先放到缓冲区的，缓冲区满了再写io生成spill文件
     2. map任务完成前利用多路归并算法合并spill文件
     3. **partition的作用是将数据排序归类分区，分区由用户定义的partition函数控制，默认是按照hash** ；
     4. combiner可有可无，**目的是在map端做一次合并，减少传输的数据量，提升速度** 。  
-![2a5927be741bce96fb735938197adbd2](../old-blog/2020/08/04/hadoop/BC53CCE6-8B0C-4BE7-A5A0-D5DA827B1C54.png)  
+![2a5927be741bce96fb735938197adbd2](images/hadoop/BC53CCE6-8B0C-4BE7-A5A0-D5DA827B1C54.png)  
 reduce端的shuffle会进行数据的copy和再次sort合并，然后发给不同的reducer进行处理；  
-![c6369a9316047bc669ea52e8b1b66b42](../old-blog/2020/08/04/hadoop/5598E445-0609-4906-BBB0-78C6EE658E91.png)
+![c6369a9316047bc669ea52e8b1b66b42](images/hadoop/5598E445-0609-4906-BBB0-78C6EE658E91.png)
   * reduce阶段: 汇总阶段
         
         ```plain
@@ -151,7 +151,7 @@ hadoop任务提交：
 #### 数据倾斜
 
 数据经过map后，由于key的数据量分布不均，相同的key打到同一个reducer，导致reducer的压力过大；  
-![74ae4df677d20a0093267bc14155db8d](../old-blog/2020/08/04/hadoop/FAE0F2B3-A8E9-4C45-9040-5B9CE9CAD6A3.png)  
+![74ae4df677d20a0093267bc14155db8d](images/hadoop/FAE0F2B3-A8E9-4C45-9040-5B9CE9CAD6A3.png)  
 处理方式：
 
   * 加combiner，在mapper阶段提前进行聚合操作，减少reduce端的压力；

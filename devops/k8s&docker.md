@@ -5,18 +5,18 @@ date: 2020-08-11
 
 #### 1、一个k8s集群中环境角色如下：
 
-![488f7d1196cc3a1078af838ebe1637c7](../old-blog/2020/08/11/k8s&docker/E158A421-8F4D-44FC-9631-19B00687376A.png)
+![488f7d1196cc3a1078af838ebe1637c7](images/k8s&docker/E158A421-8F4D-44FC-9631-19B00687376A.png)
 
-架构图为：![29c888b62bf49379bc7024ffdacd5354](../old-blog/2020/08/11/k8s&docker/0C380D29-AEF4-42AF-A6BF-E9851672A582.png)
+架构图为：![29c888b62bf49379bc7024ffdacd5354](images/k8s&docker/0C380D29-AEF4-42AF-A6BF-E9851672A582.png)
 
-或者如图：![87b89122b8d4ca5a8c44b47029c76d37](../old-blog/2020/08/11/k8s&docker/4004C9C0-0B7E-4D03-93DF-1A9106636308.png)
+或者如图：![87b89122b8d4ca5a8c44b47029c76d37](images/k8s&docker/4004C9C0-0B7E-4D03-93DF-1A9106636308.png)
 
 或者：  
-![8579a5cef2598226f5c0fcf2384c9043](../old-blog/2020/08/11/k8s&docker/7B1393AC-F996-4046-BEDF-D863032FC26B.png)
+![8579a5cef2598226f5c0fcf2384c9043](images/k8s&docker/7B1393AC-F996-4046-BEDF-D863032FC26B.png)
 
 其中master的架构为：  
-![dc3c754d7e67362de4e746d9dec50be4](../old-blog/2020/08/11/k8s&docker/C169886C-3061-4617-8238-B4B0B5761C06.png)  
-分层的架构：![45edee46817788b3dd3e8d802f08e2a4](../old-blog/2020/08/11/k8s&docker/4EA7F365-F27D-4401-958B-6934F995FB7E.png)
+![dc3c754d7e67362de4e746d9dec50be4](images/k8s&docker/C169886C-3061-4617-8238-B4B0B5761C06.png)  
+分层的架构：![45edee46817788b3dd3e8d802f08e2a4](images/k8s&docker/4EA7F365-F27D-4401-958B-6934F995FB7E.png)
 
 从图中可以看出：  
 一个kubenetes集群有一个master节点，和多个node节点；  
@@ -42,7 +42,7 @@ deployment并不直接管理pod，他是通过replicaSet来进行管理；三者
 
 
 
-![acd64d6077830555d001426c2e2217fc](../old-blog/2020/08/11/k8s&docker/0714A8DE-D7A4-44BF-9D13-A52DCCC18013.png)
+![acd64d6077830555d001426c2e2217fc](images/k8s&docker/0714A8DE-D7A4-44BF-9D13-A52DCCC18013.png)
 
   * statefulset：有状态应用部署
   * heapster：做数据收集，收集每一个node下的（cpu、mem，filesystem等监控数据）， 他以pod的形式运行在kube-system下；
@@ -54,7 +54,7 @@ deployment并不直接管理pod，他是通过replicaSet来进行管理；三者
 
 #### 3、docker
 
-##### 3.1 docker容器技术对于计算机界好比与集装箱之于运输业；![1eceee27e304067a5727128c9af74c03](../old-blog/2020/08/11/k8s&docker/1B6F5D35-221C-4F22-9D09-D64BFA140ED2.png)
+##### 3.1 docker容器技术对于计算机界好比与集装箱之于运输业；![1eceee27e304067a5727128c9af74c03](images/k8s&docker/1B6F5D35-221C-4F22-9D09-D64BFA140ED2.png)
 
 ##### 3.2 docker的作用：
 
@@ -69,7 +69,7 @@ deployment并不直接管理pod，他是通过replicaSet来进行管理；三者
   * docker容器：启动的一个docker镜像；
   * docker宿主机：任意一台装有docker环境的服务器，可以pull、push、启动、停止一个docker服务；
   * docker客户端：docker client命令工具；  
-![3199ec19c6d873c82921ad445834080e](../old-blog/2020/08/11/k8s&docker/4E4F2292-76D6-4DE3-A764-9DF83E4CF3F5.png)
+![3199ec19c6d873c82921ad445834080e](images/k8s&docker/4E4F2292-76D6-4DE3-A764-9DF83E4CF3F5.png)
 
 
 
@@ -116,7 +116,7 @@ Dockerfile是生成image的源文件，Dockerfile有自己的语法：
   * Docker swarm 是docker官方推出的容器调度服务平台；
   * kubenetes的基础是docker容器；kubenetes解决的是容器的集群化编排和生命周期管理；
   * docker是单机方案，解决的是应用程序的镜像化和容器化，能力仅限于单机；  
-docker swarm和k8s的区别如下图：![3a3a3545fac4eda4d39447efb7b9a76a](../old-blog/2020/08/11/k8s&docker/8CB31860-6997-4CD1-A55D-9FE41EDE5307.png)
+docker swarm和k8s的区别如下图：![3a3a3545fac4eda4d39447efb7b9a76a](images/k8s&docker/8CB31860-6997-4CD1-A55D-9FE41EDE5307.png)
 
 #### 5、helm、k8s、tiller的关系
 
@@ -145,7 +145,7 @@ docker swarm和k8s的区别如下图：![3a3a3545fac4eda4d39447efb7b9a76a](../ol
 
 ##### 6.2 pod操作
 
-pod的配置文件如下：![a9177753889e6e704399c1d63d832c87](../old-blog/2020/08/11/k8s&docker/3C0EEA75-9E35-409F-AC6D-4D340A8129E3.png)
+pod的配置文件如下：![a9177753889e6e704399c1d63d832c87](images/k8s&docker/3C0EEA75-9E35-409F-AC6D-4D340A8129E3.png)
 
 
 
@@ -283,7 +283,7 @@ deployment配置的样例：
     * kubectl get pod -l app=<app名> —namespace=<命名空间> 通过标签查找pod
     ```
 
-![7fa0db8f50a50fa3aa83b5345998e604](../old-blog/2020/08/11/k8s&docker/012FAE08-362D-42BD-A042-92302D1A65BC.png)
+![7fa0db8f50a50fa3aa83b5345998e604](images/k8s&docker/012FAE08-362D-42BD-A042-92302D1A65BC.png)
     
     
     ```plain
@@ -302,7 +302,7 @@ deployment配置的样例：
     *  kubectl rollout history deploy/<deploy名> 镜像名=镜像名:tag —namespace=<命名空间> #查看历史发布
     ```
 
-![46098cd394cce077dd9c27469f9149fc](../old-blog/2020/08/11/k8s&docker/E7D4D60E-FD62-4BD5-94A3-34E8D97D5709.png)
+![46098cd394cce077dd9c27469f9149fc](images/k8s&docker/E7D4D60E-FD62-4BD5-94A3-34E8D97D5709.png)
     
     
     ```plain
@@ -328,7 +328,7 @@ k8s的升级方式有：
 ##### 6.4 service操作
 
 service更像是一个网关层，负责pod的流量入口，分发和负载均衡；他会提供一个统一的ip来访问这一组pod，而不用关心pod的替换、变更等造成的pod的ip变更；  
-创建service的配置文件：![b61428db0c51be6ffd390e5d71a380d1](../old-blog/2020/08/11/k8s&docker/6013232F-A5E2-4C9D-8A46-D45B28CB9187.png)
+创建service的配置文件：![b61428db0c51be6ffd390e5d71a380d1](images/k8s&docker/6013232F-A5E2-4C9D-8A46-D45B28CB9187.png)
 
 
 
@@ -380,7 +380,7 @@ Kubenetes service转发后端服务的四种方式：
   * NodePort: 这种方式除了提供一个虚拟ip，还为每一个node提供了一个nodeip+nodeport的方式供外部进行访问；
   * loadbalance：负载均衡。Client端为多个server的形式，load balance根据策略，选择出往哪个server发送请求；k8s的lb是通过ingress实现的，ingress是一种k8s的路由转发机制， ingress是整个k8s集群的接入层，负责集群内外的通讯；  
 Ingress和service的关系如下图：  
-![8f93cd2d5b2ed53e6d01e185b314efd7](../old-blog/2020/08/11/k8s&docker/9AB10783-659C-4982-82E7-57F8216AE2D4.png)
+![8f93cd2d5b2ed53e6d01e185b314efd7](images/k8s&docker/9AB10783-659C-4982-82E7-57F8216AE2D4.png)
 
 
 
@@ -405,8 +405,8 @@ k8s的配置管理组件，比如A服务和B服务需要一些公用的环境配
         ```
 
   * Env方式挂载configmap  
-![67319e8c67d2259236525557c955fb17](../old-blog/2020/08/11/k8s&docker/4C1D33B8-EDA9-41B8-B754-F0391B2A49E8.png)
+![67319e8c67d2259236525557c955fb17](images/k8s&docker/4C1D33B8-EDA9-41B8-B754-F0391B2A49E8.png)
   * volume方式挂载configmap  
-![df346688c64e5ff32f4a0780f1dcecae](../old-blog/2020/08/11/k8s&docker/72CC80CC-CBAF-4697-B719-18D2DF7EE118.png)
+![df346688c64e5ff32f4a0780f1dcecae](images/k8s&docker/72CC80CC-CBAF-4697-B719-18D2DF7EE118.png)
 
 

@@ -1,0 +1,183 @@
+---
+title: Hadoop
+date: 2020-08-04
+---
+
+#### hadoop
+
+组成：
+
+  * hadoop common：各种工具配置；
+  * hadoop HDFS：分布式文件系统；
+  * hadoop MapReduce：分布式海量数据处理的软件框架集群；
+  * hadoop Yarn：作业调度和集群资源调度；
+  * mapreduce: 分布式计算系统；  
+生态：
+  * 支持结构化数据存储的数据库HBASE；
+  * 分布式协调服务框架zookeeper；
+  * 基于内存的数据处理框架Spark；
+  * 数据仓库软件Hive；
+  * 可扩展的机器学习和挖掘框架Mahout;
+
+
+
+![20567b3ea38c7aa789a8541edcc5fc3b](images/hadoop/A7FCBADC-682F-4475-9CBF-7E76D58FA87A.png)
+
+#### HDFS架构
+
+![fdde795e5d06eb9f93d954f2aa083560](images/hadoop/F96D99EE-1D59-445E-9273-544F8D3CA754.png)
+
+  * client：客户端，提供一些命令来访问hdfs;
+  * nameNode: 就是master，是一个管理者，管理整个文件系统的元数据以及每一个文件所对应的数据块信息；
+  * dataNode: slave，存储实际的数据库，执行数据的读/写操作；
+  * secondaryNameNode：保存了一份和nameNode中一致的镜像文件和编辑日志，当NameNode发生故障时，可以从中恢复数据。
+
+#### 常用命令
+        
+        ```plain
+        hadoop dfs –ls /user/  # 查看指定目录
+        
+        hadoop dfs –cat /user/input.txt # 显示文件
+        hadoop dfs –put test.txt /user/ # 存储文件
+        hadoop dfs –get /user/input.txt . # 拉取文件到本地
+        hadoop dfs –rmr /user/input.txt # 删除文件
+        hadoop dfs –mkdir /user/aa # 创建目录
+        hadoop dfs –touchz /user/bb # 创建文件
+        hadoop dfs –mv /user/bb /user/cc # 创建文件
+        hadoop job -list # 列出job
+        hadoop job -kill job-id #删除一个job
+        ```
+
+#### 文件存储
+
+
+
+
+block: 是hdfs中的最小存储单位，它是物理划分；  
+hdfs中的block默认是保存三份(dfs.replication设置)；blocksize默认是128mb。（可以通过参数dfs.block.size来设置）  
+设置为128MB的原因：读取hdfs文件的时间=block寻址时间+读取block的时间，如果分块太小，会导致block寻址时间过大，因此不能设置太小。
+
+#### MapReduce
+
+Hadoop任务的核心思想是MapReduce，shuffle是MapReduce的核心。shuffle的主要工作是从Map结束到Reduce开始之间的过程。shuffle阶段又可以分为Map端的shuffle和Reduce端的shuffle。  
+![f670231269b9996bf9c076d0549492af](images/hadoop/1DF573B9-E982-4656-921A-80F222EAEE81.png)  
+**map和reduce的数量：**  
+totalSize: mapreduce job输入文件的总大小；  
+numSplits: map的个数；（设置的希望切成多少份）  
+goalSize: totalSize/numSplits；  
+minSize: split的最小值；  
+finalSplitSize=max(minSize,min(goalSize,blockSize))，最终的分片数；  
+map的设置mapred.map.tasks参数只是一个引导值，最终的map数量为: default_num = total_size / split_size;  
+reducer的数量完全依赖于mapred.reduce.tasks这个设置；
+
+词频统计的例子：
+
+  * split阶段：逻辑划分阶段，目的是将输入划分给map；  
+finalSplitSize=max(minSize,min(goalSize,blockSize))
+
+  * map阶段：分工的阶段
+        
+        ```plain
+        #!/usr/bin/env python
+        """ mapper.py """
+        import sys
+        for line in sys.stdin:
+            line = line.strip()
+            words = line.split()
+            for word in words:
+                print '%s\t%s' % (word, 1)
+        ```
+
+  * shuffle: 从map输出到reduce输入的中间过程为shuffle的阶段；它是将map输出的无规则的数据搭乱成有规则的数据，以便reduce端接收；分为map shuffle和reduce shuffle。  
+![30b34db80670938be0d0277f2172a5c2](images/hadoop/82FB9C5E-9B36-4AA7-95AA-E2589B7A361C.png)  
+map阶段的shuffle特点：
+
+    1. map产生的kv结果是先放到缓冲区的，缓冲区满了再写io生成spill文件
+    2. map任务完成前利用多路归并算法合并spill文件
+    3. **partition的作用是将数据排序归类分区，分区由用户定义的partition函数控制，默认是按照hash** ；
+    4. combiner可有可无，**目的是在map端做一次合并，减少传输的数据量，提升速度** 。  
+![2a5927be741bce96fb735938197adbd2](images/hadoop/BC53CCE6-8B0C-4BE7-A5A0-D5DA827B1C54.png)  
+reduce端的shuffle会进行数据的copy和再次sort合并，然后发给不同的reducer进行处理；  
+![c6369a9316047bc669ea52e8b1b66b42](images/hadoop/5598E445-0609-4906-BBB0-78C6EE658E91.png)
+  * reduce阶段: 汇总阶段
+        
+        ```plain
+        #!/usr/bin/env python
+        from operator import itemgetter
+        import sys
+        
+        current_word = None
+        current_count = 0
+        word = None
+        
+        for line in sys.stdin:
+            line = line.strip()
+            word, count = line.split('\t', 1)
+            try:
+                count = int(count)
+            except ValueError:
+                continue
+        
+            if current_word == word:
+                current_count += count
+            else:
+                if current_word:
+                    print '%s\t%s' % (current_word, current_count)
+                current_count = count
+                current_word = word
+        if current_word == word:
+            print '%s\t%s' % (current_word, current_count)
+        ```
+
+hadoop任务提交：
+        
+        ```plain
+        hadoop streaming 
+            -input 输入文件 \
+            -output 输出文件 \
+            -mapper "python mapper.py" \
+            -reducer "python reducer.py" \
+            -file reducer.py #打包文件到提交的作业中 \
+            -file mapper.py \
+            -D mapred.job.name=任务名 \
+            -D mapred.job.map.capacity=最多同时运行的map任务数 \
+            -D mapred.map.tasks=map任务个数 \
+            -D mapred.reduce.tasks=reduce任务个数 \
+            -D mapred.map.over.capacity.allowed=false \
+            -D mapred.job.priority=NORMAL \
+            -D abaci.job.base.environment=default
+        ```
+
+#### 数据倾斜
+
+数据经过map后，由于key的数据量分布不均，相同的key打到同一个reducer，导致reducer的压力过大；  
+![74ae4df677d20a0093267bc14155db8d](images/hadoop/FAE0F2B3-A8E9-4C45-9040-5B9CE9CAD6A3.png)  
+处理方式：
+
+  * 加combiner，在mapper阶段提前进行聚合操作，减少reduce端的压力；
+
+  * 加两级reduce，第一级对key随机加值，第二级在去掉随机数对全局进行聚合。
+
+#### mapreduce优化
+
+  * 数据输入：需要合并小文件。小文件是指小于block size的文件，小文件会导致namenode中的map过大，另外每个小文件会独占一个分片，导致任务的装载耗时；
+
+  * 通过设置，减少spill次数，增大一次merge的文件数目，从而减少merge的次数；
+
+  * 不影响业务的前提下，进行combiner处理；
+
+  * 合理设置map和reduce数，设置二者共存；
+
+
+
+
+#### spark & mapreduce
+
+**磁盘IO &延迟**
+
+  * mapreduce必须依赖于磁盘以及大量的网络开销，磁盘的IO开销大，延迟也高；
+  * spark是基于内存的计算框架，中间结果直接放内存，可以更快的进行迭代计算；迭代运算效率spark : mapreduce = 110:0.9
+  * _表达能力_ *  
+spark不仅仅是map reduce，还可以支持RDD等；
+
+

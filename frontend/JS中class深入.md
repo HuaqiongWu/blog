@@ -37,7 +37,7 @@ Es5中定义的类中的方法和es6中定义的类中的方法的区别：
   * Es6中的class和5中的区别并不大，只是一个语法糖（便于书写的东西）
   * 在ES6里如果要使用super使用父类的同名方法，父类的方法不能设置为实例方法  
 （2）Person结构  
-![image](old-blog/2018/10/11/JS中class深入/1.png)  
+![image](../old-blog/2018/10/11/JS中class深入/1.png)  
 （3）es5中创建一个类的方式
         
         ```bash
@@ -61,11 +61,11 @@ Es5中定义的类中的方法和es6中定义的类中的方法的区别：
   * 首先给Person.prototype属性所指的原型对象上添加一个方法describe
   * 在使用new关键字创建对象时，会默认给当前对象添加一个原型属性__proto__并指向Person.prototype
   * 在读取describe时候，jany本身并不包含该方法，于是到原型链上去查找。  
-![image](old-blog/2018/10/11/JS中class深入/2.png)  
+![image](../old-blog/2018/10/11/JS中class深入/2.png)  
 （4）js中object中包含两部分：普通属性和原型属性__proto__，从结构中可以看到__proto__仍然是一个对象，即原型对象。而prototype是function独有的属性，再调用new时用来生成__proto__。constructor是比较特殊的属性，用来指向类本身。  
-![image](old-blog/2018/10/11/JS中class深入/3.png)  
+![image](../old-blog/2018/10/11/JS中class深入/3.png)  
 （5）object function之间的关系图(Object和Function互为实例)  
-![image](old-blog/2018/10/11/JS中class深入/4.png)  
+![image](../old-blog/2018/10/11/JS中class深入/4.png)  
 （6）es6中extends的实现
         
         ```bash
@@ -93,7 +93,7 @@ Es5中定义的类中的方法和es6中定义的类中的方法的区别：
         ```
 
 Foo和Bar的关系图如下（可以看到Bar的prototype是Foo的一个实例，在Bar的prototype中找不到的属性到Foo中去找）  
-![image](old-blog/2018/10/11/JS中class深入/5.png)  
+![image](../old-blog/2018/10/11/JS中class深入/5.png)  
 （7）instance of的原理：检测左侧的__proto__原型链上是不是存在右侧的prototype
         
         ```bash

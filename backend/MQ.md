@@ -8,21 +8,21 @@ MQ的作用：解耦、异步、削峰
 
 ### 解耦
 
-![fb9e63ca16848ca251bb62b5f6328bb2](old-blog/2020/10/18/MQ/F10BDC00-F6DF-4C99-AC8C-6308ABDE29E4.png)  
+![fb9e63ca16848ca251bb62b5f6328bb2](../old-blog/2020/10/18/MQ/F10BDC00-F6DF-4C99-AC8C-6308ABDE29E4.png)  
 比如A的信息需要同步给多个模块，一种实现是A中调用BCD甚至新加入的E的接口进行同步；如果同步的模块发生变化，A中逻辑就需要发生变化。用MQ实现为：A生产数据放入MQ，谁需要谁去消费；引入的问题是，需要保证MQ的高可用性。  
-![a4b04a6c0a7c6cfb73bf519730ab2bc6](old-blog/2020/10/18/MQ/BB2908B9-80EA-44BC-B09C-9BB597184C10.png)
+![a4b04a6c0a7c6cfb73bf519730ab2bc6](../old-blog/2020/10/18/MQ/BB2908B9-80EA-44BC-B09C-9BB597184C10.png)
 
 ### 异步
 
 对于比较耗时的操作，如下图：  
-![493956760e57b08940146c3b3ec4bebb](old-blog/2020/10/18/MQ/7ADC88BB-F056-4DDC-AA47-5D5DB4BA788B.png)  
+![493956760e57b08940146c3b3ec4bebb](../old-blog/2020/10/18/MQ/7ADC88BB-F056-4DDC-AA47-5D5DB4BA788B.png)  
 改为异步后，用户体验大幅度提升，但是也会引来不一致的问题，比如B模块操作完成，而C和D模块操作失败。  
-![04486bfdfae91cac4cf9d32727f02fdb](old-blog/2020/10/18/MQ/922A863B-CDB5-47ED-817C-CDDD418BB65D.png)
+![04486bfdfae91cac4cf9d32727f02fdb](../old-blog/2020/10/18/MQ/922A863B-CDB5-47ED-817C-CDDD418BB65D.png)
 
 ### 削峰
 
 用户请求暴增的情况下，可以用MQ起到一个缓冲的作用 。  
-![a646368c434aca132cf7c2d961e011bf](old-blog/2020/10/18/MQ/1C4934F7-6304-474A-9EB2-E1C151F9BAC5.png)
+![a646368c434aca132cf7c2d961e011bf](../old-blog/2020/10/18/MQ/1C4934F7-6304-474A-9EB2-E1C151F9BAC5.png)
 
 ### redis和MQ的区别
 

@@ -113,7 +113,7 @@ date: 2018-12-24
 
 6、执行执行上下文的创建流程  
 （1）默认是全局上下文global context， 每遇到一个函数会创建一个函数执行上下文，进入栈， 只有在栈顶时才会激活执行上下文。  
-![image](old-blog/2018/12/24/call和apply以及this的指向深入/1.png)  
+![image](../old-blog/2018/12/24/call和apply以及this的指向深入/1.png)  
 （2）闭包的执行上下文创建过程
     
     
@@ -129,11 +129,11 @@ date: 2018-12-24
     result();
     ```
 
-![image](old-blog/2018/12/24/call和apply以及this的指向深入/2.png)  
-![image](old-blog/2018/12/24/call和apply以及this的指向深入/3.png)  
+![image](../old-blog/2018/12/24/call和apply以及this的指向深入/2.png)  
+![image](../old-blog/2018/12/24/call和apply以及this的指向深入/3.png)  
 通过闭包的作用域链可以发现，innerFoo在全局中保留了一个引用，导致未被回收。  
 （3）一个执行上下文的结构如下：  
-![image](old-blog/2018/12/24/call和apply以及this的指向深入/4.png)  
+![image](../old-blog/2018/12/24/call和apply以及this的指向深入/4.png)  
 执行过程中对属性的查找是按照作用域链条进行查找，并且查找过程是不可逆的， 只能向后查找，因此全局的无法访问内部函数的变量。
     
     

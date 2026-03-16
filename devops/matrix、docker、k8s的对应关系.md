@@ -31,18 +31,18 @@ date: 2020-08-17
 
 #### 3、基于matrix的业务分层
 
-![cf0b6e84f09b98d0159209cd4796c648](old-blog/2020/08/17/matrix、docker、k8s的对应关系/01C48DCE-A207-43FE-9EB9-1E7AD3E48531.png)
+![cf0b6e84f09b98d0159209cd4796c648](../old-blog/2020/08/17/matrix、docker、k8s的对应关系/01C48DCE-A207-43FE-9EB9-1E7AD3E48531.png)
 
 #### 4、matrix生态和k8s生态的层级对比关系
 
-![2e4a8905731822128c57edcdc04cf25d](old-blog/2020/08/17/matrix、docker、k8s的对应关系/05B7C998-587A-44CB-BFC6-3AB43CFE20FC.png)
+![2e4a8905731822128c57edcdc04cf25d](../old-blog/2020/08/17/matrix、docker、k8s的对应关系/05B7C998-587A-44CB-BFC6-3AB43CFE20FC.png)
 
 #### 5、和k8s的功能对比：
 
-![af694ac3a74c994e173c3c4c10c93f36](old-blog/2020/08/17/matrix、docker、k8s的对应关系/9F6142AC-E385-4157-B562-BA2606575246.png)  
-![bcd2885fbc50f0807403040acf552320](old-blog/2020/08/17/matrix、docker、k8s的对应关系/D21A58AC-1082-43A3-B202-5183437DFD2D.png)  
-![bec63a48bfb4ec2c1770a7e0094b329f](old-blog/2020/08/17/matrix、docker、k8s的对应关系/C1E32F2A-4813-45D7-9F5D-492FCD5EF8E4.png)  
-![3dce1dc52d76b83fe785ef7471b5a4c6](old-blog/2020/08/17/matrix、docker、k8s的对应关系/9256F795-03F8-47D3-A538-01982955588B.png)  
-![b265402826847da36d29d896e22071bc](old-blog/2020/08/17/matrix、docker、k8s的对应关系/F2B06F13-B9F8-46B6-9DD9-0C75ED3E0EF1.png)
+![af694ac3a74c994e173c3c4c10c93f36](../old-blog/2020/08/17/matrix、docker、k8s的对应关系/9F6142AC-E385-4157-B562-BA2606575246.png)  
+![bcd2885fbc50f0807403040acf552320](../old-blog/2020/08/17/matrix、docker、k8s的对应关系/D21A58AC-1082-43A3-B202-5183437DFD2D.png)  
+![bec63a48bfb4ec2c1770a7e0094b329f](../old-blog/2020/08/17/matrix、docker、k8s的对应关系/C1E32F2A-4813-45D7-9F5D-492FCD5EF8E4.png)  
+![3dce1dc52d76b83fe785ef7471b5a4c6](../old-blog/2020/08/17/matrix、docker、k8s的对应关系/9256F795-03F8-47D3-A538-01982955588B.png)  
+![b265402826847da36d29d896e22071bc](../old-blog/2020/08/17/matrix、docker、k8s的对应关系/F2B06F13-B9F8-46B6-9DD9-0C75ED3E0EF1.png)
 
 

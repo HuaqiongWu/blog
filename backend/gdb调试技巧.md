@@ -1,0 +1,6 @@
+---
+title: gdb调试技巧
+date: 2019-01-07
+---
+
+![image](../old-blog/2019/01/07/gdb调试技巧/1.png)

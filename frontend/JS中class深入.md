@@ -1,0 +1,342 @@
+---
+title: JS中class深入
+date: 2018-10-11
+---
+
+1、es6中的class  
+（1）es6中定义一个class的实例
+    
+    
+    ```bash
+    class Person{
+        constructor(name){
+            this.name = name
+        }
+      Hello2 = () => {
+        //  console.log(‘hello 2 是原型方法，每个实例对象都包含一个，而不是放在__proto——中的')
+      }
+        hello(){
+            console.log('my name is'+this.name)
+        }
+    }
+    var xiaoming = new Person('xiaoming')
+    xiaoming.hello() // my name is xiaoming
+    var lisi = new Person(‘lisi')
+    lisi.hello() // my name is lisi
+    
+    typeof Person // function
+    xiaoming.__proto__ === lisi.__proto__  // true
+    xiaoming.__proto__ === Person.prototype // true
+    Xiaoming.hello = Person.prototype.hello // true
+    ```
+
+Es5中定义的类中的方法和es6中定义的类中的方法的区别：
+
+  * Es5中定义的方法是可以枚举的Object.keys(Person1.__proto) : [‘hello’], 而es6中的不可以枚举
+  * es6中的方法定义时不要带function且方法名可以用参数
+  * Es6中的class和5中的区别并不大，只是一个语法糖（便于书写的东西）
+  * 在ES6里如果要使用super使用父类的同名方法，父类的方法不能设置为实例方法  
+（2）Person结构  
+![image](../old-blog/2018/10/11/JS中class深入/1.png)  
+（3）es5中创建一个类的方式
+        
+        ```bash
+        function Person(name) {  // 以function的形式创建类
+          this.name = name
+        }
+        Person.prototype.describe = function(){
+          console.log('my name is'+this.name)
+        }
+        var jany = new Person('jany')
+        jany.__proto__ === Person.prototype // true
+        jany.describe()
+        function superMan(name,age){
+          Person.call(this,name)  // Person.apply(this, args)
+          this.age = age
+        }
+        superMan.prototype = Object.create(Person.prototype) // Objcet.create是用创建一个新的obj，并将obj.__proto__指向当前的obj。
+        ```
+
+以上代码执行的过程为
+  * 首先给Person.prototype属性所指的原型对象上添加一个方法describe
+  * 在使用new关键字创建对象时，会默认给当前对象添加一个原型属性__proto__并指向Person.prototype
+  * 在读取describe时候，jany本身并不包含该方法，于是到原型链上去查找。  
+![image](../old-blog/2018/10/11/JS中class深入/2.png)  
+（4）js中object中包含两部分：普通属性和原型属性__proto__，从结构中可以看到__proto__仍然是一个对象，即原型对象。而prototype是function独有的属性，再调用new时用来生成__proto__。constructor是比较特殊的属性，用来指向类本身。  
+![image](../old-blog/2018/10/11/JS中class深入/3.png)  
+（5）object function之间的关系图(Object和Function互为实例)  
+![image](../old-blog/2018/10/11/JS中class深入/4.png)  
+（6）es6中extends的实现
+        
+        ```bash
+        class Foo {
+          constructor(who){
+            this.me = who;
+          }
+          identify(){
+            return "I am " + this.me;
+          }
+        }
+        class Bar extends Foo {
+          constructor(who){
+            // super() 指的是调用父类 （super关键字指代父类的实例即this对象）
+            // 调用的同时，会绑定 this 。
+            // 如：Foo.call(this, who)
+            super(who);
+          }
+          speak() {
+            alert( "Hello, " + this.identify() + "." );
+          }
+        }
+        var b1 = new Bar( "b1" );
+        b1.speak();
+        ```
+
+Foo和Bar的关系图如下（可以看到Bar的prototype是Foo的一个实例，在Bar的prototype中找不到的属性到Foo中去找）  
+![image](../old-blog/2018/10/11/JS中class深入/5.png)  
+（7）instance of的原理：检测左侧的__proto__原型链上是不是存在右侧的prototype
+        
+        ```bash
+        L instanceof R     //  L.__proto__.__proto__….. === R.prototype
+        ```
+
+（8） es6之前没有类的概念，为了实现继承需要采用一些手段， 以下描述了类继承的一些进展  
+1、通过原型链继承 - js原型链条的特性导致如果一个object中找不到当前属性可以按照prototype往上找，因此为了实现继承，可以将child的prototype设置为parent的一个实例。
+        
+        ```bash
+        function Parent(name) {
+          this.name = name;
+        }
+        Parent.prototype.sayName = function(){
+          console.log(‘parent name’, this.name)
+        }
+        function Child(name) {
+          this.name = name;
+        }
+        Child.prototype = new Parent(‘zhang’);
+        Child.prototype.constructor = Child;
+        Child.prototype.sayName = function() {
+          console.log(‘child name’, this.name)
+        }
+        var child = new Child(’son’);
+        child.sayName();  // parent个人的一些属性对于child的多个实体来说是一份
+        ```
+
+2、为了解决上面的属性不能继承的问题，可以利用类继承的方式
+        
+        ```bash
+        function Parent(name) {
+            this.name = name;console.log('set parent name', name);
+        }
+        Parent.prototype.sayName = function() {
+            console.log('parent name:', this.name);
+        }
+        Parent.prototype.doSomthing = function() {
+            console.log('parent do something!');
+        }
+        function Child(name, parentName) {
+            Parent.call(this, parentName);
+            this.child_name = name;
+        }
+        var child = new Child('son’);
+        ```
+
+child有两个属性分别为name和child_name，但是方法确继承不下来了。
+
+
+
+3、将上面属性继承和方法继承组合在一起
+    
+    
+    ```bash
+    function Parent(name) {
+      this.parent_name = name;
+    }
+    Parent.prototype.sayName = function(){
+      console.log('parent name', this.name)
+    }
+    function Child(chiild_name, parent_name) {
+      Parent.call(this, parent_name)
+      this.child_name = chiild_name;
+    }
+    Child.prototype = new Parent('zhang');
+    Child.prototype.constructor = Child;
+    Child.prototype.sayName = function() {
+      console.log('child name', this.name)
+    }
+    var child = new Child('son', 'li');
+    ```
+
+此时既做到了属性继承也做到了方法继承， child的结构为：
+
+4、上述两次冗余的地方目的是为了将子类的prototype的__proto__指向父类，因此可以创建一个空函数， 空函数的prototype指向parent的prototype，而子类为此空函数的子类即可。
+    
+    
+    ```bash
+    Child.prototype = new Parent('zhang’); 可以升级为  child.prototype = Object.create(Parent.prototype)
+    ```
+
+阿拉蕾的class实现
+    
+    
+    ```bash
+    // The base Class implementation.
+    function Class(o) {
+      //这个判断用来支持 将一个已有普通类转换成 阿拉蕾的类
+      if (!(this instanceof Class) && isFunction(o)) {
+        //原理是给这个函数增加extend，implement方法
+        return classify(o)
+      }
+    }
+    //用于创建一个类，第一个参数可选，可以直接创建时就指定继承的父类。
+    //第二个参数也可选，用来表明需要混入的类属性。
+    //有三个特殊的属性为Extends,Implements,Statics.分别代表要继承的父类，需要混入原型的东西，还有静态属性。
+    Class.create = function(parent, properties) {
+      //创建一个类时可以不指定要继承的父类。直接传入属性对象。
+      if (!isFunction(parent)) {
+        properties = parent
+        parent = null
+      }
+    
+      properties || (properties = {})
+      //没有指定父类的话 就查看有没有Extends特殊属性，都没有的话就用Class作为父类
+      parent || (parent = properties.Extends || Class)
+      properties.Extends = parent
+    
+      // 子类构造函数的定义
+      function SubClass() {
+        // 自动帮忙调用父类的构造函数
+        parent.apply(this, arguments)
+    
+        // Only call initialize in self constructor.
+        //真正的构造函数放在initialize里面
+        if (this.constructor === SubClass && this.initialize) {
+          this.initialize.apply(this, arguments)
+        }
+      }
+    
+      // Inherit class (static) properties from parent.
+      // parent为Class就没必要混入
+      if (parent !== Class) {
+        //将父类里面的属性都混入到子类里面这边主要是静态属性
+        mix(SubClass, parent, parent.StaticsWhiteList)
+      }
+    
+      // Add instance properties to the subclass.
+      // 调用implement将自定义的属性混入到子类原型里面。遇到特殊值会单独处理，真正的继承也是发生在这里面
+      //这边把属性也都弄到了原型上，因为这边每次create或者extend都会生成一个新的SubClass。
+      //所以倒也不会发生属性公用的问题。但是总感觉不大好
+      implement.call(SubClass, properties)
+    
+      // Make subclass extendable.
+      //给生成的子类增加extend和implement方法，可以在类定义完后，再去继承，去混入其他属性。
+      return classify(SubClass)
+    }
+    
+    // Create a sub Class based on `Class`.
+    Class.extend = function(properties) {
+      properties || (properties = {})
+      //定义继承的对象是自己
+      properties.Extends = this
+      //调用Class.create实现继承的流程
+      return Class.create(properties)
+    }
+    
+    // 这里定义了一些特殊的属性，阿拉蕾遍历时发现key是这里面的一个时，会调用这里面的方法处理。
+    Class.Mutators = {
+      //这个定义了继承的真正操作代码。
+      'Extends': function(parent) {
+        //这边的this指向子类
+        var existed = this.prototype
+        //生成一个中介原型，就是之前我们实现的objectCreat
+        var proto = createProto(parent.prototype)
+        //将子类原型有的方法混入到新的中介原型上
+        mix(proto, existed)
+        // 改变构造函数指向子类
+        proto.constructor = this
+        // 改变原型 完成继承
+        this.prototype = proto
+        //为子类增加superclass属性，这样可以调用父类原型的方法。
+        this.superclass = parent.prototype
+      },
+      //这个有点类似组合的概念，支持数组。将其他类的属性混入到子类原型上
+      'Implements': function(items) {
+        isArray(items) || (items = [items])
+        var proto = this.prototype, item
+        while (item = items.shift()) {
+          mix(proto, item.prototype || item)
+        }
+      },
+      //传入静态属性
+      'Statics': function(staticProperties) {
+        mix(this, staticProperties)
+      }
+    }
+    
+    // Shared empty constructor function to aid in prototype-chain creation.
+    function Ctor() {}
+    // 用于在类定义之后，往类里面添加方法。提供了之后修改类的可能。
+    // 类似上面defjs实现的open函数。
+    function implement(properties) {
+      var key, value
+      for (key in properties) {
+        value = properties[key]
+        //发现属性是特殊的值时，调用对应的处理函数处理
+        if (Class.Mutators.hasOwnProperty(key)) {
+          Class.Mutators[key].call(this, value)
+        } else {
+          this.prototype[key] = value
+        }
+      }
+    }
+    
+    //给一个普通的函数 增加extend和implement方法。
+    function classify(cls) {
+      cls.extend = Class.extend
+      cls.implement = implement
+      return cls
+    }
+    
+    //用来支持 commonjs的模块规范。
+    module.exports = Class
+    // 使用
+    // Create a new Class.
+    //  var SuperPig = Class.create({
+    //    Extends: Animal,
+    //    Implements: Flyable,
+    //    initialize: function() {
+    //      SuperPig.superclass.initialize.apply(this, arguments)
+    //    },
+    //    Statics: {
+    //      COLOR: 'red'
+    //    }
+    // })
+    //
+    
+    // 这个方法就是我们之前实现的objectCreat，用来使用一个中介者来处理原型的问题，
+    // 当浏览器支持`__proto__`时可以直接使用。
+    // 否则新建一个空函数再将父类的原型赋值给这个空函数，返回这个空函数的实例
+    var createProto = Object.__proto__ ?
+        function(proto) {
+          return { __proto__: proto }
+        } :
+        function(proto) {
+          Ctor.prototype = proto
+          return new Ctor()
+        }
+    
+    // Helpers 下面都是些辅助方法，很简单就不说了
+    function mix(r, s, wl) {
+      // Copy "all" properties including inherited ones.
+      for (var p in s) {
+        //过滤掉原型链上面的属性
+        if (s.hasOwnProperty(p)) {
+          if (wl && indexOf(wl, p) === -1) continue
+          // 在 iPhone 1 代等设备的 Safari 中，prototype 也会被枚举出来，需排除
+          if (p !== 'prototype') {
+            r[p] = s[p]
+          }
+        }
+      }
+    }
+    ```
